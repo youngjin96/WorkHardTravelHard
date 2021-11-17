@@ -1,14 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { theme } from './color';
 
 export default function App() {
+  // work: true, travel: false
   const [working, setWorking] = useState(true);
   const [text, setText] = useState("");
+  const [toDos, setToDos] = useState({});
   const travel = () => setWorking(false);
   const work = () => setWorking(true);
   const onChangeText = (payload) => setText(payload);
+  const addToDo = () => {
+    if(text === ""){
+      return
+    }
+    /* ES6
+    const newToDos = {
+      ...toDos,
+      [Date.now()]: {text, work:working}
+    };
+    */
+    // 두개의 object를 state 수정없이 결합하는 방법(Reactjs에서는 안됨)
+    const newToDos = Object.assign({}, toDos, {[Date.now()]: {text, work:working}});
+    setToDos(newToDos);
+    setText("");
+  };
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -24,11 +41,20 @@ export default function App() {
         </TouchableOpacity>
       </View>
       <TextInput
+        returnKeyType="done"
+        onSubmitEditing={addToDo}
         onChangeText={onChangeText}
         value={text}
         placeholder={working ? "Add To Do" : "Where To Go"}
         style={styles.input}
       />
+      <ScrollView>
+        {Object.keys(toDos).map((key) => (
+        <View style={styles.toDo} key={key}>
+          <Text style={styles.toDoText}>{toDos[key].text}</Text>
+        </View>
+        ))}
+      </ScrollView>
     </View>
   );
 }
@@ -55,7 +81,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderRadius: 30,
-    marginTop: 20,
+    marginVertical: 20,
     fontSize: 18,
+  },
+  toDo:{
+    backgroundColor: theme.toDoBg,
+    marginBottom: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+  },
+  toDoText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "500",
   }
 });
