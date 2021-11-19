@@ -26,7 +26,7 @@ export default function App() {
   useEffect(() => {
     loadToDos();
   }, []);
-  // AsyncStorage에 add기능
+  // AsyncStorage에 add 기능
   const addToDo = async () => {
     if(text === ""){
       return
@@ -43,7 +43,7 @@ export default function App() {
     await saveToDos(newToDos);
     setText("");
   };
-  // AsyncStorage에 delete기능
+  // AsyncStorage에 delete 기능
   const deleteToDo = (key) => {
     Alert.alert("Delete To Do?", "Are you sure?",[
       {text: "Cancel"}, 
@@ -57,6 +57,20 @@ export default function App() {
       },
     ]);
   };
+  // AsyncStorage에 modify 기능
+  const modifyToDo = (key) => {
+    Alert.prompt("Modify To Do?", "", [
+      {text: "Cancel"},
+      {text: "Modify",
+        onPress: value => {
+          const newToDos = {...toDos};
+          newToDos[key].text = value;
+          setToDos(newToDos);
+          saveToDos(newToDos);
+        },
+      },
+    ]);
+  }
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -81,12 +95,14 @@ export default function App() {
       />
       <ScrollView>
         {Object.keys(toDos).map((key) => 
-          toDos[key].working === working ? (
+          toDos[key].working === working ? (            
           <View style={styles.toDo} key={key}>
-            <Text style={styles.toDoText}>{toDos[key].text}</Text>
-            <TouchableOpacity onPress={() => deleteToDo(key)}>
-              <Fontisto name="trash" size={18} color="white" />
+            <TouchableOpacity>
+              <Text style={styles.toDoText} onPress={() => modifyToDo(key)}>{toDos[key].text}</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => deleteToDo(key)}>
+              <Fontisto name="trash" size={20} color="white" />
+            </TouchableOpacity>      
           </View>
           ) : null
         )}
@@ -128,11 +144,11 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   toDoText: {
     color: "white",
     fontSize: 16,
-    fontWeight: "500",
-  }
+    fontWeight: "500",    
+  },
 });
