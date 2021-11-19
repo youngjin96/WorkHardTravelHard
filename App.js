@@ -79,10 +79,10 @@ export default function App() {
             pressable이 새로 나왔다. */}
         <TouchableOpacity onPress={work}>
           {/* style을 object로 사용하면서 확장하는 법 {{... }} */}
-          <Text style={{...styles.btnText, color: working ? "white" : theme.grey}}>Work</Text>
+          <Text style={{...styles.btnText, color: working ? "white" : theme.grey}}>ToDo</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={travel}>
-          <Text style={{...styles.btnText, color: !working ? "white" : theme.grey}}>Travel</Text>
+          <Text style={{...styles.btnText, color: !working ? "white" : theme.grey}}>ToGo</Text>
         </TouchableOpacity>
       </View>
       <TextInput
